@@ -67,7 +67,7 @@
   .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:8px; }
   .top { display:flex; gap:8px; align-items:baseline; }
   .badge { font-size:12px; font-weight:700; padding:2px 8px; border-radius:99px; border:1.5px solid currentColor; white-space:nowrap; }
-  .s-配送中 { color:var(--ship); } .s-発送待ち { color:var(--wait); }
+  .s-輸送中 { color:var(--ship); }
   .s-配達完了,.s-受取済み { color:var(--done); } .s-注文済み,.s-発送準備中,.s-キャンセル { color:var(--wait); }
   .item { font-weight:600; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
   .meta { color:var(--sub); font-size:13px; margin-top:4px; word-break:break-all; }
@@ -119,10 +119,10 @@ const order = { '配達中':0, 'お届け予定':1, '輸送中':2, '発送済み
 function card(p) {
   
   const status = p['完了'] === '済' ? (p['状況'] === 'キャンセル' ? 'キャンセル' : '受取済み')
-    : /注文済み|発送準備中/.test(p['状況'] || '') ? '発送待ち' : '配送中';
+    : /注文済み|発送準備中/.test(p['状況'] || '') ? '注文済み' : '輸送中';
   const sub = [p['お店'], p['運送会社'] && p['運送会社'] !== '不明' ? p['運送会社'] : '', p['追跡番号']].filter(Boolean).join('・');
   let need = '';
-  if (!p['追跡番号'] && status === '配送中') {
+  if (!p['追跡番号'] && status === '輸送中') {
     const days = p['発送日'] ? Math.floor((Date.now() - new Date(p['発送日'].replace(/-/g, '/'))) / 864e5) : null;
     need = days == null ? '<div class="need">追跡番号なし</div>'
       : days >= 7 ? `<div class="need late">追跡番号なし・発送から${days}日 → 届いていなければ確認してください</div>`
