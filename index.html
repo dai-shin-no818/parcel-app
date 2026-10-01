@@ -134,8 +134,7 @@ function card(p) {
     p.trackUrl ? `<a href="${esc(p.trackUrl)}" target="_blank">配送状況</a>` : '',
     p['リンク'] && p['リンク'] !== p.trackUrl ? `<a href="${esc(p['リンク'])}" target="_blank">注文ページ</a>` : '',
     
-    p['完了'] === '済' ? `<button class="linkbtn" onclick="act('markUndone','${p['ID']}')">戻す</button>`
-      : !p.autoCheck ? `<button class="linkbtn" onclick="act('markDone','${p['ID']}')">受取済みにする</button>` : ''
+    p['完了'] === '済' ? `<button class="linkbtn" onclick="act('markUndone','${p['ID']}')">戻す</button>` : ''
   ].filter(Boolean).join('');
   return `<div class="card">
     <div class="top"><span class="badge s-${esc(status)}">${esc(status)}</span><div class="item">${esc(p['商品名'] || '（商品名なし）')}</div></div>
@@ -170,9 +169,9 @@ $('#add').onsubmit = e => {
 };
 { const c = window.PARCEL_CACHED && window.PARCEL_CACHED(); if (c) render(c); }
 load('getParcels');
-
+// GAS の画面で開いたときだけ：合言葉つきの新しい画面へのリンクを出す
 if (!window.PARCEL_STATIC) google.script.run.withSuccessHandler(u => { $('#newPageLink').href = u; $('#newPage').style.display = ''; }).getNewPageUrl();
-
+// お知らせ（ログイン切れなど）
 google.script.run.withSuccessHandler(list => {
   $('#notices').innerHTML = (list || []).map(n => `<div class="notice">${esc(n.msg)}</div>`).join('');
 }).getNotices();
