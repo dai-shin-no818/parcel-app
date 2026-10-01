@@ -94,6 +94,7 @@
 <div id="notices"></div>
 <div id="msg">読み込み中…</div>
 <div id="active"></div>
+<details id="subBox" style="display:none"><summary id="subSum">定期便</summary><div id="subs"></div></details>
 <details id="doneBox"><summary>届いたもの（最近7日）</summary><div id="done"></div></details>
 <div id="newPage" style="display:none;margin:14px 0"><a id="newPageLink" href="#" target="_blank">新しい画面へ（上の表示が出ない画面）</a></div>
 <details>
@@ -175,6 +176,19 @@ if (!window.PARCEL_STATIC) google.script.run.withSuccessHandler(u => { $('#newPa
 google.script.run.withSuccessHandler(list => {
   $('#notices').innerHTML = (list || []).map(n => `<div class="notice">${esc(n.msg)}</div>`).join('');
 }).getNotices();
+// 定期便（矢印で開閉。最初は閉じておく）
+const md = d => { const x = new Date(d.replace(/-/g, '/')); return isNaN(x) ? '' : `${x.getMonth() + 1}/${x.getDate()}（${'日月火水木金土'[x.getDay()]}）`; };
+google.script.run.withSuccessHandler(list => {
+  if (!list || !list.length) return;
+  $('#subSum').textContent = `定期便（${list.length}件）`;
+  $('#subs').innerHTML = list.map(s => `<div class="card">
+    <div class="top"><span class="badge s-注文済み">${esc(s.interval || '定期')}</span><div class="item">${esc(s.name)}</div></div>
+    ${s.stale ? '<div class="need late">しばらく案内のメールが来ていません。停止した可能性があります</div>'
+      : `<div class="eta">次回：${md(s.next)}${s.estimate ? 'ごろ（見込み）' : ' 到着予定'}</div>`}
+    ${s.deadline && !s.stale ? `<div class="meta">変更できるのは ${md(s.deadline)} まで</div>` : ''}
+    <div class="links"><span class="meta" style="margin:0">${esc(s.shop)}</span><a href="${esc(s.link)}" target="_blank">定期便を管理</a></div></div>`).join('');
+  $('#subBox').style.display = '';
+}).getSubscriptions();
 </script>
 </body>
 </html>
