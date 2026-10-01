@@ -185,7 +185,6 @@ google.script.run.withSuccessHandler(list => {
     <div class="top"><span class="badge s-注文済み">${esc(s.interval || '定期')}</span><div class="item">${esc(s.name)}</div></div>
     ${s.stale ? '<div class="need late">しばらく案内のメールが来ていません。停止した可能性があります</div>'
       : `<div class="eta">次回：${md(s.next)}${s.estimate ? 'ごろ（見込み）' : ' 到着予定'}</div>`}
-    ${s.deadline && !s.stale ? `<div class="meta">変更できるのは ${md(s.deadline)} まで</div>` : ''}
     <div class="links"><span class="meta" style="margin:0">${esc(s.shop)}</span><a href="${esc(s.link)}" target="_blank">定期便を管理</a></div></div>`).join('');
   $('#subBox').style.display = '';
 }).getSubscriptions();
