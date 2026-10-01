@@ -82,6 +82,7 @@
   .row { display:flex; gap:8px; }
   .empty { color:var(--sub); text-align:center; padding:20px 0; }
   #msg { color:var(--sub); font-size:13px; min-height:1em; }
+  .notice { border:1.5px solid #dc2626; color:#dc2626; border-radius:12px; padding:8px 12px; margin-bottom:8px; font-size:13px; font-weight:600; }
   details summary { color:var(--sub); font-size:13px; cursor:pointer; margin:14px 0 6px; }
 </style>
 </head>
@@ -90,6 +91,7 @@
   <h1>荷物まとめて追跡</h1>
   <button class="primary" id="refresh">今すぐ更新</button>
 </header>
+<div id="notices"></div>
 <div id="msg">読み込み中…</div>
 <div id="active"></div>
 <details id="doneBox"><summary>届いたもの（最近7日）</summary><div id="done"></div></details>
@@ -170,6 +172,10 @@ $('#add').onsubmit = e => {
 load('getParcels');
 
 if (!window.PARCEL_STATIC) google.script.run.withSuccessHandler(u => { $('#newPageLink').href = u; $('#newPage').style.display = ''; }).getNewPageUrl();
+
+google.script.run.withSuccessHandler(list => {
+  $('#notices').innerHTML = (list || []).map(n => `<div class="notice">${esc(n.msg)}</div>`).join('');
+}).getNotices();
 </script>
 </body>
 </html>
