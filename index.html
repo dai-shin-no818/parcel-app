@@ -74,9 +74,9 @@
   .eta { color:var(--go); font-weight:600; font-size:13px; margin-top:2px; }
   .need { color:var(--sub); font-size:12px; margin-top:4px; }
   .late { color:#dc2626; font-weight:700; }
-  .links { display:flex; gap:14px; margin-top:6px; font-size:13px; flex-wrap:wrap; }
+  .links { display:flex; gap:14px; margin-top:6px; font-size:13px; flex-wrap:wrap; align-items:center; }
   a { color:var(--accent); text-decoration:none; }
-  .linkbtn { background:none; border:none; padding:0; color:var(--sub); font-size:13px; }
+  .linkbtn { margin-left:auto; background:none; border:1.5px solid var(--line); border-radius:99px; padding:2px 10px; color:var(--sub); font-size:12px; font-weight:600; }
   form { display:flex; flex-direction:column; gap:8px; }
   input, select { font:16px inherit; padding:9px 10px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--text); width:100%; }
   .row { display:flex; gap:8px; }
@@ -129,8 +129,9 @@ function card(p) {
   const links = [
     p.trackUrl ? `<a href="${esc(p.trackUrl)}" target="_blank">配送状況</a>` : '',
     p['リンク'] && p['リンク'] !== p.trackUrl ? `<a href="${esc(p['リンク'])}" target="_blank">注文ページ</a>` : '',
-    p['完了'] === '済' ? `<button class="linkbtn" onclick="act('markUndone','${p['ID']}')">未完了に戻す</button>`
-                       : `<button class="linkbtn" onclick="act('markDone','${p['ID']}')">受け取った</button>`
+    
+    p['完了'] === '済' ? `<button class="linkbtn" onclick="act('markUndone','${p['ID']}')">戻す</button>`
+      : !p.autoCheck ? `<button class="linkbtn" onclick="act('markDone','${p['ID']}')">受取済みにする</button>` : ''
   ].filter(Boolean).join('');
   return `<div class="card">
     <div class="top"><span class="badge s-${esc(status)}">${esc(status)}</span><div class="item">${esc(p['商品名'] || '（商品名なし）')}</div></div>
